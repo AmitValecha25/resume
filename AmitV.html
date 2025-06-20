@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amit Valecha - Professional CV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Professional Teal & Stone -->
+    <!-- Application Structure Plan: The CV is structured as a single-page static document, presented in a clear two-column layout. The 'Overview' section (professional summary, contact, main KPIs) spans the full width at the top for immediate impact, with contact info moved directly under the name. Below this, the content splits into two main columns: The left column focuses on 'Professional Experience' and 'Key Skills'. The right column is dedicated to 'Project Leadership & Consulting Achievements', 'Tools & Technologies', 'Education', and 'Certifications', optimizing space. Each experience entry includes its static, always-visible bar chart to provide immediate visual context for achievements. All heading font sizes are reduced to optimize for a two-page print output. -->
+    <!-- Visualization & Content Choices: 1. Impact KPIs (Overview): Goal: Inform/Impress. Method: HTML text stats. Interaction: None. Justification: Provides an immediate 'wow' factor with top numerical achievements. 2. Experience Metrics (Experience Section): Goal: Inform/Analyze. Method: Two Static Bar Charts (Chart.js/Canvas), one per company. Interaction: None (always visible). Justification: Clearly visualizes distinct performance metrics for each role, directly linking data to experience. 3. Skills/Tools: Goal: Organize. Method: Grouped HTML lists/tags. Interaction: None. Justification: Categorizes competencies for easy reference. 4. Consulting Projects: Goal: Inform/Showcase. Method: Detailed text descriptions. Interaction: None. Justification: Highlights significant achievements in a project-oriented format. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* stone-50 */
+            color: #1c1917; /* stone-900 */
+        }
+        .header-name {
+            font-size: 2.5rem; /* Large font for name */
+            font-weight: 700;
+            color: #0f766e; /* teal-700 */
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+        .header-contact {
+            font-size: 0.95rem;
+            color: #44403c; /* stone-700 */
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Constrain width for better print/column fit */
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px; /* Fixed height for screen column consistency */
+            max-height: 300px; /* Ensure chart doesn't get too tall on large screens */
+        }
+        .section-title {
+            font-size: 2rem; /* Adjusted from 2.25rem */
+            font-weight: 700;
+            color: #0f766e; /* teal-700 */
+            margin-bottom: 1rem; /* Adjusted for column spacing */
+            text-align: left; /* Align to column */
+        }
+        .skill-card, .project-card, .education-card, .certification-card {
+            background: white;
+            border-left: 4px solid #0d9488;
+            padding: 1.25rem; /* Adjusted padding */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 1rem; /* Spacing between cards */
+        }
+        .tool-tag {
+            background-color: #f1f5f9; /* slate-100 */
+            color: #0f766e;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            display: inline-block; /* Ensure tags wrap correctly */
+            margin: 0.25rem; /* Spacing between tags */
+        }
+        .download-button {
+            display: none; /* Removed as per request */
+        }
+        /* Hide nav and footer for print */
+        @media print {
+            header, footer {
+                display: none !important;
+            }
+            body {
+                background-color: white !important;
+                color: black !important;
+                font-size: 8.5pt; /* Further reduced base font size for readability on paper */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                margin: 0;
+                padding: 0;
+            }
+            main {
+                width: 100%; /* Take full print width */
+                padding: 0.6cm; /* Standard print margin, significantly reduced */
+                margin: 0;
+                box-shadow: none !important;
+                display: block; /* Override flex/grid for main */
+            }
+            .container {
+                padding: 0 !important;
+            }
+            .header-name {
+                font-size: 2rem !important; /* Smaller name for print */
+                margin-bottom: 0.1rem !important;
+            }
+            .header-contact {
+                font-size: 0.8em !important; /* Smaller contact info for print */
+                margin-bottom: 1rem !important; /* Reduced margin */
+            }
+            .grid {
+                display: block; /* Stack grid columns for print */
+            }
+            .md\:grid-cols-5 > *, .md\:col-span-3, .md\:col-span-2,
+            .md\:grid-cols-2 > *, .md\:col-span-1, .md\:col-span-2 {
+                width: 100% !important; /* Force full width */
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            .section-title {
+                text-align: left !important;
+                margin-top: 0.6rem !important; /* Reduced top margin */
+                margin-bottom: 0.3rem !important; /* Reduced bottom margin */
+                font-size: 1.2rem !important; /* Smaller title for print */
+            }
+            .kpi-card, .skill-card, .project-card, .education-card, .certification-card {
+                box-shadow: none !important;
+                border: none !important; /* Removed border */
+                border-left: none !important; /* Explicitly remove left border */
+                border-radius: 0 !important; /* Removed rounded corners for print */
+                background-color: white !important;
+                padding: 0.5rem !important; /* Smaller padding for print */
+                margin-bottom: 0.3rem !important; /* Reduced spacing */
+                page-break-inside: avoid; /* Keep cards together */
+            }
+            /* Specifically target the .bg-white wrapper around experience/skills/etc. to remove its shadow/border */
+            .bg-white.rounded-xl.shadow-lg {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important; /* Remove its padding as well */
+            }
+
+            .chart-container {
+                max-width: 100% !important;
+                height: 150px !important; /* Fixed height for print chart, significantly reduced */
+                max-height: 150px !important;
+                margin-bottom: 0.3rem !important; /* Reduced spacing */
+                page-break-inside: avoid;
+            }
+            ul {
+                margin-left: 1rem !important; /* Reduced indentation */
+            }
+            li {
+                margin-bottom: 0.1rem !important; /* Tighter line spacing */
+            }
+            .tool-tag {
+                margin: 0.08rem !important; /* Tighter tag spacing */
+                padding: 0.2rem 0.4rem !important;
+                font-size: 0.7em !important; /* Smaller tag font for print */
+            }
+            .experience-details.border-b {
+                border-bottom: none !important; /* Removed bottom border for separation */
+                padding-bottom: 0.5rem !important; /* Reduced padding */
+                margin-bottom: 0.5rem !important; /* Reduced margin */
+            }
+            .experience-details:last-child {
+                border-bottom: none !important;
+            }
+            .certification-category-title, .qualification-category-title {
+                font-size: 0.85rem !important; /* Smaller font for category titles in print */
+                margin-top: 0.4rem !important;
+                margin-bottom: 0.15rem !important;
+            }
+            /* Adjust individual list item spacing for main experience */
+            .experience-details ul li {
+                margin-bottom: 0.1rem !important;
+            }
+            .text-lg {
+                font-size: 0.95em !important; /* Slightly smaller for summary text */
+            }
+            .text-base, .text-md, .text-sm {
+                font-size: 0.9em !important; /* Smaller for main content text */
+            }
+            .text-xl, .text-2xl {
+                font-size: 1em !important; /* Adjusting relative to new base */
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    
+
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Header - Name and Contact -->
+        <div class="mb-8">
+            <h1 class="header-name">AMIT VALECHA</h1>
+            <p class="header-contact">Birmingham, United Kingdom | amitvalecha9@gmail.com | +44 7721 177130</p>
+        </div>
+
+        <!-- Professional Summary & KPIs (Full Width Top Section) -->
+        <section id="overview" class="mb-12 scroll-mt-24">
+            <div class="grid md:grid-cols-5 gap-8 items-center">
+                <div class="md:col-span-3">
+                    <h2 class="text-4xl md:text-5xl font-bold text-stone-800 mb-4">Project Management Professional</h2>
+                    <ul class="list-disc list-inside text-lg text-stone-600 space-y-2 mb-6">
+                        <li>Certified Scrum Master with 2+ years of experience leading Agile teams across e-commerce, CMS, and no-code platforms.</li>
+                        <li>Proven expertise in facilitating Agile ceremonies, removing blockers, and delivering high-impact products.</li>
+                        <li>Collaborates effectively with cross-functional teams to drive continuous improvement and product delivery.</li>
+                        <li>Currently pursuing MSc in Management, blending strong leadership, communication, and technical understanding.</li>
+                    </ul>
+                </div>
+                <div class="md:col-span-2">
+                    <div class="space-y-4">
+                        <div class="kpi-card">
+                            <p class="text-4xl font-bold text-teal-600">10%</p>
+                            <p class="text-sm font-medium text-stone-500">Revenue Growth Contributed</p>
+                        </div>
+                        <div class="kpi-card">
+                            <p class="text-4xl font-bold text-teal-600">95%</p>
+                            <p class="text-sm font-medium text-stone-500">On-Time Release Rate</p>
+                        </div>
+                         <div class="kpi-card">
+                            <p class="text-4xl font-bold text-teal-600">50k+</p>
+                            <p class="text-sm font-medium text-stone-500">Users Impacted</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two Column Layout for main content -->
+        <section class="grid md:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="md:col-span-2 space-y-8">
+                <section id="experience" class="scroll-mt-24">
+                    <h2 class="section-title">Professional Experience</h2>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                        <div id="GroRapid-content" class="experience-details mb-8 pb-8 border-b border-stone-200">
+                            <h3 class="text-xl font-bold text-stone-800">Associate Product Manager - GroRapid</h3>
+                            <p class="text-md text-stone-500 mb-4">June 2023 – September 2024 | Remote/India</p>
+                            <ul class="list-disc list-inside space-y-2 text-stone-700 text-sm mb-6">
+                                <li>Championed Agile Scrum methodologies for a team of <strong>8 developers</strong>, improving sprint predictability by <strong>15%</strong>.</li>
+                                <li>Managed and delivered <strong>6+ complex projects</strong> impacting <strong>50,000+ users</strong> and contributing to <strong>10% revenue growth</strong>.</li>
+                                <li>Resolved an average of <strong>5 blockers per sprint</strong>, reducing project delays by <strong>20%</strong>.</li>
+                                <li>Streamlined onboarding processes, improving completion rates by <strong>25%</strong> through intensive UI/UX collaboration.</li>
+                                <li>Achieved a <strong>95% on-time release rate</strong> for product updates through improved backlog refinement.</li>
+                            </ul>
+                            <h3 class="text-lg font-bold text-stone-800 text-center mb-4">GroRapid Performance Insights</h3>
+                            <div class="chart-container">
+                                <canvas id="GroRapidChart"></canvas>
+                            </div>
+                        </div>
+                        <div id="Blacksof-content" class="experience-details">
+                            <h3 class="text-xl font-bold text-stone-800">Project Coordinator - Blacksof</h3>
+                            <p class="text-md text-stone-500 mb-4">January 2023 – May 2023 | India</p>
+                            <ul class="list-disc list-inside space-y-2 text-stone-700 text-sm mb-6">
+                                <li>Coordinated <strong>12 digital campaigns</strong> for <strong>3 key clients</strong>, resulting in a <strong>30% increase in lead generation</strong>.</li>
+                                <li>Facilitated Agile ceremonies for a team of <strong>6</strong>, improving retrospective action item completion by <strong>20%</strong>.</li>
+                                <li>Translated feedback from <strong>100+ sources</strong> into <strong>15 actionable improvements</strong>, boosting client satisfaction by <strong>10%</strong>.</li>
+                                <li>Contributed to achieving a <strong>90% project success rate</strong> through fostering a collaborative, Agile-principled culture.</li>
+                            </ul>
+                            <h3 class="text-lg font-bold text-stone-800 text-center mb-4">Blacksof Performance Insights</h3>
+                            <div class="chart-container">
+                                <canvas id="BlacksofChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="skills" class="scroll-mt-24">
+                    <h2 class="section-title">Key Skills</h2>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                        <div class="skill-card border-none p-0 shadow-none">
+                            <h3 class="font-bold text-lg mb-2 text-stone-800">Agile & Scrum Methodologies</h3>
+                            <ul class="list-disc list-inside text-sm text-stone-600">
+                                <li>Certified Scrum Master (CSM)</li>
+                                <li>Sprint Planning & Execution</li>
+                                <li>Backlog Management, Release Planning</li>
+                            </ul>
+                        </div>
+                        <div class="skill-card border-none p-0 shadow-none">
+                            <h3 class="font-bold text-lg mb-2 text-stone-800">Project & Product Management</h3>
+                            <ul class="list-disc list-inside text-sm text-stone-600">
+                                <li>Product Roadmapping</li>
+                                <li>User Stories & Requirements Gathering</li>
+                                <li>UI/UX Collaboration, Product Metrics & Reporting</li>
+                            </ul>
+                        </div>
+                        <div class="skill-card border-none p-0 shadow-none">
+                            <h3 class="font-bold text-lg mb-2 text-stone-800">Team Leadership & Facilitation</h3>
+                            <ul class="list-disc list-inside text-sm text-stone-600">
+                                <li>Agile Ceremony Facilitation</li>
+                                <li>Stakeholder Communication</li>
+                                <li> Blocker Resolution, Cross-functional Team Collaboration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="consulting-projects" class="scroll-mt-24">
+                    <h2 class="section-title">Project Leadership & Consulting Achievements</h2>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                        <div class="project-card border-none p-0 shadow-none">
+                            <h3 class="font-bold text-lg mb-1 text-stone-800">IBM Innovation with Design Thinking & AI</h3>
+                            <p class="text-sm text-stone-600 mb-2">1st Place (2024)</p>
+                            <ul class="list-disc list-inside text-sm text-stone-700">
+                                <li>Led empathy mapping, user persona creation, and solution design for an AI-driven business challenge.</li>
+                                <li>Successfully pitched and presented to IBM leaders, securing top recognition.</li>
+                            </ul>
+                        </div>
+                        <div class="project-card border-none p-0 shadow-none">
+                            <h3 class="font-bold text-lg mb-1 text-stone-800">Proudfoot & Savitas Consulting Competition</h3>
+                            <p class="text-sm text-stone-600 mb-2">3rd Place (2024)</p>
+                            <ul class="list-disc list-inside text-sm text-stone-700">
+                                <li>Improved Overall Equipment Effectiveness (OEE) by <strong>77%</strong> for a real client using practical, agile methods.</li>
+                                <li>Delivered main operational plan and final pitch to judges, achieving a top-tier placement.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="md:col-span-1 space-y-8">
+                <section id="tools" class="scroll-mt-24">
+                    <h2 class="section-title">Tools & Technologies</h2>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                        <div class="flex flex-wrap gap-2 justify-start">
+                            <span class="tool-tag">Jira</span>
+                            <span class="tool-tag">Confluence</span>
+                            <span class="tool-tag">Trello</span>
+                            <span class="tool-tag">Figma</span>
+                            <span class="tool-tag">Miro</span>
+                            <span class="tool-tag">Webflow</span>
+                            <span class="tool-tag">Balsamiq</span>
+                            <span class="tool-tag">Infinity</span>
+                            <span class="tool-tag">Strapi</span>
+                            <span class="tool-tag">Shopify</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="education" class="scroll-mt-24">
+                    <h2 class="section-title">Education</h2>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                        <div class="education-card border-none p-0 shadow-none flex items-start gap-4">
+                            <div>
+                                <h3 class="font-bold text-lg text-stone-800">MSc in Management</h3>
+                                <p class="text-stone-600">University of Birmingham, United Kingdom</p>
+                                <p class="text-sm text-stone-500 mt-1">September 2024 – September 2025 (Expected)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="certifications" class="scroll-mt-24">
+                    <h2 class="section-title">Certifications</h2>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                        <div class="certification-card border-none p-0 shadow-none">
+                            <h3 class="font-bold text-lg text-stone-800 mb-2 certification-category-title">Scrum Certifications</h3>
+                            <ul class="list-disc list-inside text-sm text-stone-700 mb-4">
+                                <li>Certified Scrum Product Owner (CSPO), Scrum Alliance (2024–2026)</li>
+                                <li>Certified ScrumMaster (CSM), Scrum Alliance (2023–2025)</li>
+                            </ul>
+
+                            <h3 class="font-bold text-lg text-stone-800 mb-2 certification-category-title">Analytics & Project Management</h3>
+                            <ul class="list-disc list-inside text-sm text-stone-700 mb-4">
+                                <li>Advanced Google Analytics 4 (GA4), LinkedIn (2025)</li>
+                                <li>Google Analytics 4 (GA4) Essential Training, LinkedIn (2025)</li>
+                                <li>Agile Foundations, Project Management Institute (2025)</li>
+                                <li>Product Management First Steps, PMI (2024)</li>
+                                <li>Product Manager Fellowship, NextLeap (2022)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer - Removed for clean print output -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const groRapidData = {
+                labels: ['Sprint Predictability', 'Team Velocity', 'Onboarding Rate', 'Project Delays'],
+                data: [15, 10, 25, -20],
+                label: 'Performance Improvement (%)'
+            };
+
+            const blacksofData = {
+                labels: ['Lead Generation', 'Client Satisfaction', 'Action Item Completion', 'Project Success'],
+                data: [30, 10, 20, 90],
+                label: 'Key Metric Improvement (%)'
+            };
+            
+            function createChart(ctx, dataObj, chartTitle) {
+                // Check if canvas is in print mode (simplified check, might need more robust solution for complex cases)
+                const isPrintMode = window.matchMedia('print').matches;
+                const chartHeight = isPrintMode ? 150 : 250; /* Adjusted for tighter print */
+
+                return new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: dataObj.labels,
+                        datasets: [{
+                            label: dataObj.label,
+                            data: dataObj.data,
+                            backgroundColor: (context) => {
+                                const value = context.dataset.data[context.dataIndex];
+                                return value >= 0 ? 'rgba(15, 118, 110, 0.6)' : 'rgba(220, 38, 38, 0.6)';
+                            },
+                            borderColor: (context) => {
+                                const value = context.dataset.data[context.dataIndex];
+                                return value >= 0 ? 'rgb(13, 148, 136)' : 'rgb(185, 28, 28)';
+                            },
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        layout: {
+                            padding: {
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Improvement / Value (%)',
+                                    font: {
+                                        size: isPrintMode ? 9 : 12
+                                    }
+                                },
+                                ticks: {
+                                    font: {
+                                        size: isPrintMode ? 8 : 10
+                                    }
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    font: {
+                                        size: isPrintMode ? 8 : 10
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: chartTitle,
+                                font: {
+                                    size: isPrintMode ? 12 : 16,
+                                    weight: 'bold'
+                                },
+                                color: '#1c1917'
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x + '%';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Create GroRapid chart
+            const groRapidCtx = document.getElementById('GroRapidChart').getContext('2d');
+            createChart(groRapidCtx, groRapidData, '');
+
+            // Create Blacksof chart
+            const blacksofCtx = document.getElementById('BlacksofChart').getContext('2d');
+            createChart(blacksofCtx, blacksofData, '');
+        });
+    </script>
+
+</body>
+</html>

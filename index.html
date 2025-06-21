@@ -3,78 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive CV - Amit Valecha</title>
+    <title>Amit Valecha - Professional CV</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Professional Teal & Stone -->
-    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard, not a linear document, to immediately highlight quantifiable impact and facilitate non-linear exploration. The structure uses a top navigation bar for quick access to key sections: Overview, Experience, Skills, and Education. The 'Overview' combines the professional summary with a high-level KPI dashboard of top achievements. The 'Experience' section is an interactive timeline where users click a role to view its details and a dynamic bar chart visualizing its specific metrics. This approach was chosen to make the dense, data-rich experience section more engaging and digestible, allowing recruiters to quickly grasp the candidate's value proposition. Skills and tools are visually grouped for scannability. -->
-    <!-- Visualization & Content Choices: 1. Impact KPIs (Overview): Goal: Inform/Impress. Method: Large HTML text stats. Interaction: None. Justification: Provides an immediate 'wow' factor with top metrics. 2. Experience Metrics (Experience Section): Goal: Compare/Analyze. Method: Dynamic Bar Chart (Chart.js/Canvas). Interaction: Chart data updates on-click of a timeline role. Justification: Visually translates complex performance metrics into an easily comparable format, demonstrating the impact of each role dynamically. 3. Skills/Tools (Skills Section): Goal: Organize. Method: Grouped lists and a tag cloud using styled HTML/Tailwind. Interaction: Hover effects. Justification: More visually engaging and scannable than simple bullet points. CONFIRMATION: NO SVG/Mermaid used. All visuals are HTML/CSS or Chart.js on Canvas. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- Application Structure Plan: The CV is structured as a single-page static document, presented in a clear two-column layout. The 'Overview' section (professional summary, contact, main KPIs) spans the full width at the top for immediate impact, with contact info moved directly under the name. Below this, the content splits into two main columns: The left column focuses on 'Professional Experience' and 'Key Skills'. The right column is dedicated to 'Project Leadership & Consulting Achievements', 'Tools & Technologies', 'Education', and 'Certifications', optimizing space. Each experience entry includes its static, always-visible bar chart to provide immediate visual context for achievements. All heading font sizes are reduced to optimize for a two-page print output. -->
+    <!-- Visualization & Content Choices: 1. Impact KPIs (Overview): Goal: Inform/Impress. Method: HTML text stats. Interaction: None. Justification: Provides an immediate 'wow' factor with top numerical achievements. 2. Experience Metrics (Experience Section): Goal: Inform/Analyze. Method: Two Static Bar Charts (Chart.js/Canvas), one per company. Interaction: None (always visible). Justification: Clearly visualizes distinct performance metrics for each role, directly linking data to experience. 3. Skills/Tools: Goal: Organize. Method: Grouped HTML lists/tags. Interaction: None. Justification: Categorizes competencies for easy reference. 4. Consulting Projects: Goal: Inform/Showcase. Method: Detailed text descriptions. Interaction: None. Justification: Highlights significant achievements in a project-oriented format. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc; /* stone-50 */
             color: #1c1917; /* stone-900 */
         }
-        .nav-link {
-            transition: color 0.3s ease;
+        .header-name {
+            font-size: 2.5rem; /* Large font for name */
+            font-weight: 700;
+            color: #0f766e; /* teal-700 */
+            text-align: center;
+            margin-bottom: 0.25rem;
         }
-        .nav-link:hover {
-            color: #0d9488; /* teal-600 */
+        .header-contact {
+            font-size: 0.95rem;
+            color: #44403c; /* stone-700 */
+            text-align: center;
+            margin-bottom: 2rem;
         }
         .kpi-card {
             background-color: white;
             border-radius: 0.75rem;
             padding: 1.5rem;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .kpi-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-        .experience-tab {
-            cursor: pointer;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .experience-tab.active {
-            background-color: #0d9488; /* teal-600 */
-            color: white;
-        }
-        .experience-tab:not(.active) {
-            background-color: #e7e5e4; /* stone-200 */
-            color: #44403c; /* stone-700 */
+            box-shadow: none !important;
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 600px; /* Constrain width for better print/column fit */
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+            height: 250px; /* Fixed height for screen column consistency */
+            max-height: 300px; /* Ensure chart doesn't get too tall on large screens */
         }
         .section-title {
-            font-size: 2.25rem; /* text-4xl */
+            font-size: 2rem; /* Adjusted from 2.25rem */
             font-weight: 700;
             color: #0f766e; /* teal-700 */
-            margin-bottom: 2rem;
-            text-align: center;
+            margin-bottom: 1rem; /* Adjusted for column spacing */
+            text-align: left; /* Align to column */
         }
-        .skill-card {
+        .skill-card, .project-card, .education-card, .certification-card {
             background: white;
             border-left: 4px solid #0d9488;
+            padding: 1.25rem; /* Adjusted padding */
+            border-radius: 0.75rem;
+            box-shadow: none !important;
+            margin-bottom: 1rem; /* Spacing between cards */
         }
         .tool-tag {
             background-color: #f1f5f9; /* slate-100 */
@@ -82,71 +68,165 @@
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
             font-weight: 500;
-            transition: all 0.2s ease-in-out;
+            display: inline-block; /* Ensure tags wrap correctly */
+            margin: 0.25rem; /* Spacing between tags */
         }
-        .tool-tag:hover {
-            background-color: #0d9488;
-            color: white;
-            transform: scale(1.05);
+        /* Ensure strong tags are always bold */
+        strong {
+            font-weight: bold !important;
+        }
+
+        /* Print Styles */
+        @media print {
+            /* Hide elements that are purely for screen display */
+            header, footer, #contactMeBtn, .modal-overlay { 
+                display: none !important;
+            }
+            body {
+                background-color: white !important;
+                color: black !important;
+                font-size: 8.5pt; /* Further reduced base font size for readability on paper */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                margin: 0;
+                padding: 0;
+            }
+            main {
+                width: 100%; /* Take full print width */
+                padding: 0.6cm; /* Standard print margin, significantly reduced */
+                margin: 0;
+                box-shadow: none !important;
+                display: block; /* Override flex/grid for main */
+            }
+            .container {
+                padding: 0 !important;
+            }
+            .header-name {
+                font-size: 2rem !important; /* Smaller name for print */
+                margin-bottom: 0.1rem !important;
+            }
+            .header-contact {
+                font-size: 0.8em !important; /* Smaller contact info for print */
+                margin-bottom: 1rem !important; /* Reduced margin */
+            }
+            .grid {
+                display: block; /* Stack grid columns for print */
+            }
+            .md\:grid-cols-5 > *, .md\:col-span-3, .md\:col-span-2,
+            .md\:grid-cols-2 > *, .md\:col-span-1, .md\:col-span-2 {
+                width: 100% !important; /* Force full width */
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            .section-title {
+                text-align: left !important;
+                margin-top: 0.6rem !important; /* Reduced top margin */
+                margin-bottom: 0.3rem !important; /* Reduced bottom margin */
+                font-size: 1.2rem !important; /* Smaller title for print */
+            }
+            /* Universal border/shadow/border-radius reset for print within main content */
+            main div { /* Target all divs within main */
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important; /* Ensure no rounded corner artifacts */
+                background-color: white !important; /* Ensure background is white */
+            }
+
+            /* Specifically re-assert background for elements that might need it */
+            .kpi-card,
+            .skill-card,
+            .project-card,
+            .education-card,
+            .certification-card {
+                background-color: white !important;
+                padding: 0.5rem !important; /* Retain padding for inner content of cards */
+                margin-bottom: 0.3rem !important; /* Retain spacing for inner content of cards */
+            }
+            /* The main section wrappers */
+            .bg-white.rounded-xl.shadow-lg {
+                padding: 0 !important; /* Remove wrapper padding */
+            }
+
+            .chart-container {
+                max-width: 100% !important;
+                height: 150px !important; /* Fixed height for print chart, significantly reduced */
+                max-height: 150px !important;
+                margin-bottom: 0.3rem !important; /* Reduced spacing */
+                page-break-inside: avoid;
+            }
+            ul {
+                margin-left: 1rem !important; /* Reduced indentation */
+            }
+            li {
+                margin-bottom: 0.1rem !important; /* Tighter line spacing */
+            }
+            .tool-tag {
+                margin: 0.08rem !important; /* Tighter tag spacing */
+                padding: 0.2rem 0.4rem !important;
+                font-size: 0.7em !important; /* Smaller tag font for print */
+            }
+            .experience-details.border-b {
+                border-bottom: none !important; /* Removed bottom border for separation */
+                padding-bottom: 0.5rem !important; /* Reduced padding */
+                margin-bottom: 0.5rem !important; /* Reduced margin */
+            }
+            .experience-details:last-child {
+                border-bottom: none !important;
+            }
+            .certification-category-title {
+                font-size: 0.85rem !important; /* Smaller font for category titles in print */
+                margin-top: 0.4rem !important;
+                margin-bottom: 0.15rem !important;
+            }
+            /* Adjust individual list item spacing for main experience */
+            .experience-details ul li {
+                margin-bottom: 0.1rem !important;
+            }
+            .text-lg {
+                font-size: 0.95em !important; /* Slightly smaller for summary text */
+            }
+            .text-base, .text-md, .text-sm {
+                font-size: 0.9em !important; /* Smaller for main content text */
+            }
+            .text-xl, .text-2xl {
+                font-size: 1em !important; /* Adjusting relative to new base */
+            }
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-stone-800">
-                Amit Valecha
-            </div>
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="#overview" class="nav-link font-medium text-stone-600">Overview</a>
-                <a href="#experience" class="nav-link font-medium text-stone-600">Experience</a>
-                <a href="#skills" class="nav-link font-medium text-stone-600">Skills</a>
-                <a href="#education" class="nav-link font-medium text-stone-600">Education</a>
-            </div>
-             <div class="md:hidden">
-                <select onchange="window.location.href=this.value" class="bg-stone-100 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5">
-                    <option value="#overview">Menu</option>
-                    <option value="#overview">Overview</option>
-                    <option value="#experience">Experience</option>
-                    <option value="#skills">Skills</option>
-                    <option value="#education">Education</option>
-                </select>
-            </div>
-        </nav>
-    </header>
-
     <main class="container mx-auto px-6 py-12">
 
-        <section id="overview" class="mb-24 scroll-mt-24">
+        <!-- Header - Name and Contact (always visible, optimized for ATS) -->
+        <div class="mb-8">
+            <h1 class="header-name">AMIT VALECHA</h1>
+            <p class="header-contact">Birmingham, United Kingdom | amitvalecha9@gmail.com | +44 7721 177130</p>
+        </div>
+
+        <section id="overview" class="mb-12 scroll-mt-24">
             <div class="grid md:grid-cols-5 gap-12 items-center">
                 <div class="md:col-span-3">
-                    <h1 class="text-4xl md:text-5xl font-bold text-stone-800 mb-4">Certified Scrum Master & Product Leader</h1>
-                    <p class="text-lg text-stone-600 mb-6">
-                        Highly motivated and Certified Scrum Master with 2+ years of dynamic experience in leading Agile teams across diverse environments. Adept at leveraging Scrum methodologies to drive product delivery and continuous improvement. Proven ability to facilitate all Agile ceremonies, proactively remove critical blockers, and foster high-performance cross-functional teams to deliver impactful products.
-                    </p>
-                    <div class="flex flex-wrap gap-4 text-sm">
-                        <span class="flex items-center gap-2 text-stone-600">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            Birmingham, United Kingdom
-                        </span>
-                        <span class="flex items-center gap-2 text-stone-600">
-                           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                           amitvalecha9@gmail.com
-                        </span>
-                    </div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-stone-800 mb-4">Project Management Professional & Product Owner</h1>
+                     <ul class="list-disc list-inside text-lg text-stone-600 space-y-2 mb-6">
+                        <li>Highly motivated and Certified Scrum Master with 2+ years of dynamic experience in leading Agile teams across diverse environments.</li>
+                        <li>Adept at leveraging Scrum methodologies to drive product delivery and continuous improvement.</li>
+                        <li>Proven ability to facilitate all Agile ceremonies, proactively remove critical blockers, and foster high-performance cross-functional teams to deliver impactful products.</li>
+                        <li>Adept at simplifying complex project and product insights for diverse audiences, including technical teams, senior management, and external clients.</li>
+                    </ul>
                 </div>
                 <div class="md:col-span-2">
                     <div class="space-y-4">
-                        <div class="kpi-card">
+                        <div class="skill-card p-6 rounded-lg shadow-sm">
                             <p class="text-4xl font-bold text-teal-600">10%</p>
                             <p class="text-sm font-medium text-stone-500">Revenue Growth Contributed</p>
                         </div>
-                        <div class="kpi-card">
+                        <div class="skill-card p-6 rounded-lg shadow-sm">
                             <p class="text-4xl font-bold text-teal-600">95%</p>
                             <p class="text-sm font-medium text-stone-500">On-Time Release Rate</p>
                         </div>
-                         <div class="kpi-card">
+                         <div class="skill-card p-6 rounded-lg shadow-sm">
                             <p class="text-4xl font-bold text-teal-600">50k+</p>
                             <p class="text-sm font-medium text-stone-500">Users Impacted</p>
                         </div>
@@ -155,30 +235,31 @@
             </div>
         </section>
 
-        <section id="experience" class="mb-24 scroll-mt-24">
+        <section id="experience" class="mb-12 scroll-mt-24">
             <h2 class="section-title">Professional Experience</h2>
-            <p class="text-center text-stone-600 max-w-3xl mx-auto mb-12">
-                This section details my professional journey and the quantifiable impact I've made in each role. Click on a company to see my key achievements and a visual breakdown of performance improvements.
-            </p>
-            <div class="flex justify-center items-center gap-4 mb-8">
-                <button class="experience-tab active" data-company="GroRapid">GroRapid</button>
-                <button class="experience-tab" data-company="Blacksof">Blacksof</button>
-            </div>
-            
-            <div id="experience-content" class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                <div id="GroRapid-content" class="experience-details">
-                    <h3 class="text-2xl font-bold text-stone-800">Associate Product Manager</h3>
+                 <div class="skill-card p-6 rounded-lg shadow-sm">
+                <!-- GroRapid Content -->
+                <div id="GroRapid-content" class="experience-details mb-8 pb-8 border-b border-stone-200">
+                    <h3 class="text-2xl font-bold text-stone-800">Associate Product Manager - GroRapid</h3>
                     <p class="text-md text-stone-500 mb-6">June 2023 – September 2024 | Remote/India</p>
                     <ul class="list-disc list-inside space-y-3 text-stone-700">
                         <li>Championed Agile Scrum methodologies for a team of <strong>8 developers</strong>, improving sprint predictability by <strong>15%</strong>.</li>
-                        <li>Managed and delivered <strong>6+ complex projects</strong> impacting <strong>50,000+ users</strong> and contributing to <strong>10% revenue growth</strong>.</li>
+                        <li>Managed and delivered <strong>6+ complex projects</strong> impacting <strong>50,000+ users</strong> and contributing to <strong>10% revenue growth</strong>, often serving as a primary point of contact for client needs and <strong>relationship management</strong>.</li>
                         <li>Resolved an average of <strong>5 blockers per sprint</strong>, reducing project delays by <strong>20%</strong>.</li>
                         <li>Streamlined onboarding processes, improving completion rates by <strong>25%</strong> through intensive UI/UX collaboration.</li>
                         <li>Achieved a <strong>95% on-time release rate</strong> for product updates through improved backlog refinement.</li>
+                        <li>Implemented digital marketing solutions, including <strong>SEO/SEM strategies, affiliate channel optimization</strong>, and technical SEO improvements like <strong>robots.txt and URL slug structures</strong>, enhancing platform visibility.</li>
                     </ul>
+                    <div class="mt-8">
+                        <div class="chart-container">
+                            <canvas id="groRapidChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-                <div id="Blacksof-content" class="experience-details hidden">
-                    <h3 class="text-2xl font-bold text-stone-800">Project Coordinator</h3>
+
+                <!-- Blacksof Content -->
+                <div id="Blacksof-content" class="experience-details">
+                    <h3 class="text-2xl font-bold text-stone-800">Project Coordinator - Blacksof</h3>
                     <p class="text-md text-stone-500 mb-6">January 2023 – May 2023 | India</p>
                      <ul class="list-disc list-inside space-y-3 text-stone-700">
                         <li>Coordinated <strong>12 digital campaigns</strong> for <strong>3 key clients</strong>, resulting in a <strong>30% increase in lead generation</strong>.</li>
@@ -186,20 +267,17 @@
                         <li>Translated feedback from <strong>100+ sources</strong> into <strong>15 actionable improvements</strong>, boosting client satisfaction by <strong>10%</strong>.</li>
                         <li>Contributed to achieving a <strong>90% project success rate</strong> through fostering a collaborative, Agile-principled culture.</li>
                     </ul>
-                </div>
-                <div class="mt-8">
-                    <div class="chart-container">
-                        <canvas id="experienceChart"></canvas>
+                    <div class="mt-8">
+                        <div class="chart-container">
+                            <canvas id="blacksofChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="skills" class="mb-24 scroll-mt-24">
+        <section id="skills" class="mb-12 scroll-mt-24">
             <h2 class="section-title">Skills & Expertise</h2>
-             <p class="text-center text-stone-600 max-w-3xl mx-auto mb-12">
-                My capabilities are grounded in modern project management and product development practices. Below is a summary of my core competencies and the technologies I use to deliver results.
-            </p>
             <div class="grid md:grid-cols-3 gap-8 mb-12">
                 <div class="skill-card p-6 rounded-lg shadow-sm">
                     <h3 class="font-bold text-xl mb-3 text-stone-800">Agile & Scrum Methodologies</h3>
@@ -217,6 +295,8 @@
              <h3 class="text-2xl font-bold text-center text-stone-800 mb-8">Tools & Technologies</h3>
             <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
                 <span class="tool-tag">Jira</span>
+                <span class="tool-tag">Confluence</span>
+                <span class="tool-tag">Trello</span>
                 <span class="tool-tag">Figma</span>
                 <span class="tool-tag">Miro</span>
                 <span class="tool-tag">Webflow</span>
@@ -224,13 +304,14 @@
                 <span class="tool-tag">Infinity</span>
                 <span class="tool-tag">Strapi</span>
                 <span class="tool-tag">Shopify</span>
+                <span class="tool-tag">Microsoft Office Suite (Excel, PowerPoint - including data analysis & pivoting)</span>
             </div>
         </section>
 
         <section id="education" class="scroll-mt-24">
             <h2 class="section-title">Education & Certifications</h2>
             <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-                <div class="bg-white p-8 rounded-lg shadow-lg flex items-start gap-6">
+                 <div class="skill-card p-6 rounded-lg shadow-sm">
                     <div>
                         <div class="bg-teal-100 text-teal-700 p-3 rounded-full">
                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-5.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-5.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222 4 2.222V20M1 12v7a2 2 0 002 2h18a2 2 0 002-2v-7"></path></svg>
@@ -242,7 +323,7 @@
                          <p class="text-sm text-stone-500 mt-1">Sep 2024 - Sep 2025 (Expected)</p>
                     </div>
                 </div>
-                 <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col gap-4">
+                 <div class="skill-card p-6 rounded-lg shadow-sm">
                     <div class="flex items-start gap-6">
                         <div>
                             <div class="bg-teal-100 text-teal-700 p-3 rounded-full">
@@ -260,44 +341,40 @@
         </section>
 
     </main>
-    
-    <footer class="bg-white border-t border-stone-200 mt-24">
-        <div class="container mx-auto px-6 py-6 text-center text-stone-500">
-            <p>&copy; 2024 Amit Valecha. Interactive CV created to demonstrate web development and information design capabilities.</p>
-        </div>
-    </footer>
+   
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const experienceData = {
-                GroRapid: {
-                    labels: ['Sprint Predictability', 'Team Velocity', 'Onboarding Rate', 'Project Delays'],
-                    data: [15, 10, 25, -20],
-                    label: 'Performance Improvement (%)'
-                },
-                Blacksof: {
-                    labels: ['Lead Generation', 'Client Satisfaction', 'Action Item Completion', 'Project Success'],
-                    data: [30, 10, 20, 90],
-                    label: 'Key Metric Improvement (%)'
-                }
+            const groRapidData = {
+                labels: ['Sprint Predictability', 'Team Velocity', 'Onboarding Rate', 'Project Delays'],
+                data: [15, 10, 25, -20],
+                label: 'Performance Improvement (%)'
             };
 
-            const ctx = document.getElementById('experienceChart').getContext('2d');
-            let experienceChart;
+            const blacksofData = {
+                labels: ['Lead Generation', 'Client Satisfaction', 'Action Item Completion', 'Project Success'],
+                data: [30, 10, 20, 90],
+                label: 'Key Metric Improvement (%)'
+            };
             
-            function createOrUpdateChart(company) {
-                const data = experienceData[company];
-                if (experienceChart) {
-                    experienceChart.destroy();
+            function createChart(ctx, dataObj, chartTitle, chartId) {
+                // Check if canvas is in print mode (simplified check, might need more robust solution for complex cases)
+                const isPrintMode = window.matchMedia('print').matches;
+                const chartHeight = isPrintMode ? 150 : 250; 
+
+                // Check if a chart already exists for this canvas and destroy it if it does
+                let existingChart = Chart.getChart(chartId); // Use getChart to retrieve existing instance by ID
+                if (existingChart) {
+                    existingChart.destroy();
                 }
-                
-                experienceChart = new Chart(ctx, {
+
+                new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: data.labels,
+                        labels: dataObj.labels,
                         datasets: [{
-                            label: data.label,
-                            data: data.data,
+                            label: dataObj.label,
+                            data: dataObj.data,
                             backgroundColor: (context) => {
                                 const value = context.dataset.data[context.dataIndex];
                                 return value >= 0 ? 'rgba(15, 118, 110, 0.6)' : 'rgba(220, 38, 38, 0.6)';
@@ -313,16 +390,48 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         indexAxis: 'y',
+                        layout: {
+                            padding: {
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                bottom: 0
+                            }
+                        },
                         scales: {
                             x: {
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'Improvement / Value (%)'
+                                    text: 'Improvement / Value (%)',
+                                    font: {
+                                        size: isPrintMode ? 9 : 12
+                                    }
+                                },
+                                ticks: {
+                                    font: {
+                                        size: isPrintMode ? 8 : 10
+                                    }
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    font: {
+                                        size: isPrintMode ? 8 : 10
+                                    }
                                 }
                             }
                         },
                         plugins: {
+                            title: {
+                                display: true,
+                                text: chartTitle,
+                                font: {
+                                    size: isPrintMode ? 12 : 16,
+                                    weight: 'bold'
+                                },
+                                color: '#1c1917'
+                            },
                             legend: {
                                 display: false
                             },
@@ -345,29 +454,13 @@
                 });
             }
 
-            const tabs = document.querySelectorAll('.experience-tab');
-            const contents = document.querySelectorAll('.experience-details');
+            // Create GroRapid chart
+            const groRapidCtx = document.getElementById('groRapidChart').getContext('2d');
+            createChart(groRapidCtx, groRapidData, 'GroRapid Performance Insights', 'groRapidChart');
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const company = tab.dataset.company;
-
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-
-                    contents.forEach(content => {
-                        if (content.id === `${company}-content`) {
-                            content.classList.remove('hidden');
-                        } else {
-                            content.classList.add('hidden');
-                        }
-                    });
-
-                    createOrUpdateChart(company);
-                });
-            });
-
-            createOrUpdateChart('GroRapid');
+            // Create Blacksof chart
+            const blacksofCtx = document.getElementById('blacksofChart').getContext('2d');
+            createChart(blacksofCtx, blacksofData, 'Blacksof Performance Insights', 'blacksofChart');
         });
     </script>
 
